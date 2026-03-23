@@ -120,5 +120,13 @@ Every agent execution MUST emit a structured one-liner to `.agent/logs/orchestra
 
 ## 🚫 ANTI-PATTERNS REFERENCE
 
-Cross-reference `ANTI_PATTERNS.md` at the repo root before finalizing any implementation or agent routing decision.
+---
 
+## 📥 GLOBAL CONTEXT IMPORT
+
+At session start, automatically merge global rules with local workspace rules:
+
+*   `~/.gemini/antigravity/anti-patterns-base.md` → Merge/Override `ANTI_PATTERNS.md`
+
+### ⚖️ Conflict Resolution
+**LOCAL > GLOBAL**: Rules defined in this repository's root files (e.g., `ANTI_PATTERNS.md`, `GEMINI.md`) **ALWAYS** take precedence over global base rules. This ensures absolute portability of the framework configuration.

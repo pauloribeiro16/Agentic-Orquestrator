@@ -57,28 +57,21 @@ graph TD
 
 Before responding to ANY request:
 
-```javascript
-// Pseudo-code for decision tree
-function analyzeRequest(userMessage) {
-    // 1. Classify request type
-    const requestType = classifyRequest(userMessage);
+## Decision Logic (Reasoning Chain)
 
-    // 2. Detect domains
-    const domains = detectDomains(userMessage);
+When analyzing a request, follow this reasoning chain:
 
-    // 3. Determine complexity
-    const complexity = assessComplexity(domains);
+1. **Step 1: Classify Domain**: Check matching keywords (e.g., "auth" → Security, "button" → Frontend).
+2. **Step 2: Assess Complexity**:
+   - **SIMPLE**: 1 file, 1 specific action, 1 domain.
+   - **MODERATE**: 2-3 files, multi-step but clear, ≤ 2 domains.
+   - **COMPLEX**: Multiple files, unknown architecture, contradictory constraints.
+3. **Step 3: Select Agent**:
+   - **IF SIMPLE** + 1 Domain → Use Single Specialized Agent (e.g., `@backend-specialist`).
+   - **IF MODERATE** → Chain 2 agents sequentially (e.g., `@backend-specialist` → `@test-engineer`).
+   - **IF COMPLEX** → Route to `@orchestrator` to spawn a multi-agent plan.
 
-    // 4. Select agent(s)
-    if (complexity === "SIMPLE" && domains.length === 1) {
-        return selectSingleAgent(domains[0]);
-    } else if (complexity === "MODERATE" && domains.length <= 2) {
-        return selectMultipleAgents(domains);
-    } else {
-        return "orchestrator"; // Complex task
-    }
-}
-```
+---
 
 ## 4. Response Format
 

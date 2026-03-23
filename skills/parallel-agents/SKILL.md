@@ -27,6 +27,21 @@ This skill enables coordinating multiple specialized agents through Antigravity'
 
 ---
 
+## 🧭 Parallelization Decision Tree
+
+Use this logic to decide between Parallel, Sequential, or single execution:
+
+```mermaid
+graph TD
+    A[Task Analysis] --> B{Independent sub-tasks?}
+    B -->|Yes| C{Same output artifact?}
+    B -->|No| D[Use Sequential Chain]
+    C -->|No| E[✅ Run in Parallel]
+    C -->|Yes| F[⚠️ Use Sequential + Merge Strategy]
+```
+
+---
+
 ## Native Agent Invocation
 
 ### Single Agent
