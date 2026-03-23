@@ -362,6 +362,12 @@ python .agent/scripts/checklist.py .
 # → security_scan.py → lint_runner.py → test_runner.py
 ```
 
+### Bug Persistence Protocol
+When a bug is fixed, a lint error is resolved, or a failure is corrected:
+1. Append the issue to [`RESOLVED_ISSUES.md`](./RESOLVED_ISSUES.md) at the repository root.
+2. Structure: Date, Symptom, Root Cause, Resolution, and **Prevention Rule**.
+3. Always check `RESOLVED_ISSUES.md` at start of debugging to avoid repeating mistakes.
+
 ---
 
 ## Credits & Attribution
