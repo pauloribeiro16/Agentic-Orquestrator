@@ -78,3 +78,41 @@ Triggered by "son kontrolleri yap" or "final checks":
 - **Communication:** Português de Portugal (Internally translated if needed).
 - **Technical Content:** English (US) for code, comments, and variables.
 - **Persistence:** Always end a session by updating `.agent/session-state.md` to prevent context re-ingestion costs.
+
+---
+
+## 📊 LOGGING PROTOCOL
+
+Every agent execution MUST emit a structured one-liner to `.agent/logs/orchestration.log`:
+
+```
+[TIMESTAMP] [AGENT] [MODEL_TIER] [TASK_TYPE] [COMPLEXITY] [QUOTA_ESTIMATE]
+```
+
+**Field definitions:**
+
+| Field | Example Values |
+|-------|---------------|
+| `TIMESTAMP` | `2025-03-23T14:05:00Z` |
+| `AGENT` | `@security-auditor`, `@orchestrator`, `@frontend-specialist` |
+| `MODEL_TIER` | `Opus`, `Sonnet`, `Flash` |
+| `TASK_TYPE` | `PHASE_1`, `PHASE_2`, `PHASE_3`, `PHASE_4`, `SURVEY`, `BUILD`, `EVALUATE` |
+| `COMPLEXITY` | `LOW`, `MODERATE`, `HIGH` |
+| `QUOTA_ESTIMATE` | `0.1x`, `1x`, `8x` |
+
+**Example log line:**
+```
+2025-03-23T14:05:00Z @security-auditor Sonnet PHASE_3 HIGH 1x — ASVS 3d: crypto audit initiated
+```
+
+**Rules:**
+- Log BEFORE starting the task, not after.
+- Never log secrets, user data, or API keys.
+- Rotate log if > 5MB: rename to `orchestration.log.bak`.
+
+---
+
+## 🚫 ANTI-PATTERNS REFERENCE
+
+Cross-reference `ANTI_PATTERNS.md` at the repo root before finalizing any implementation or agent routing decision.
+

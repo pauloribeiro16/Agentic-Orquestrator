@@ -1,0 +1,68 @@
+name: Markdown Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-markdown:
+    name: Lint Markdown Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: |
+            **/*.md
+            !node_modules/**
+            !.agent/logs/**
+
+  validate-frontmatter:
+    name: Validate SKILL.md and Workflow Frontmatter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check SKILL.md files have required frontmatter keys
+        run: |
+          FAILED=0
+          for f in $(find skills -name "SKILL.md"); do
+            if ! grep -q "^name:" "$f"; then
+              echo "❌ Missing 'name:' in frontmatter: $f"
+              FAILED=1
+            fi
+            if ! grep -q "^description:" "$f"; then
+              echo "❌ Missing 'description:' in frontmatter: $f"
+              FAILED=1
+            fi
+          done
+          if [ $FAILED -eq 1 ]; then
+            echo ""
+            echo "One or more SKILL.md files are missing required frontmatter fields."
+            exit 1
+          fi
+          echo "✅ All SKILL.md frontmatter checks passed."
+
+      - name: Check workflow files have description frontmatter
+        run: |
+          FAILED=0
+          for f in $(find workflows -name "*.md"); do
+            if ! grep -q "^description:" "$f"; then
+              echo "❌ Missing 'description:' in frontmatter: $f"
+              FAILED=1
+            fi
+          done
+          if [ $FAILED -eq 1 ]; then
+            echo ""
+            echo "One or more workflow files are missing the 'description:' frontmatter field."
+            exit 1
+          fi
+          echo "✅ All workflow frontmatter checks passed."

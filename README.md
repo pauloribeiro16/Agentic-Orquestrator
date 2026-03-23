@@ -306,6 +306,46 @@ antigravity-core/
 
 ---
 
+## 📊 Logging Protocol
+
+Every agent execution emits a structured one-liner to `.agent/logs/orchestration.log`:
+
+```
+[TIMESTAMP] [AGENT] [MODEL_TIER] [TASK_TYPE] [COMPLEXITY] [QUOTA_ESTIMATE]
+```
+
+| Field | Example Values |
+|-------|---------------|
+| `TIMESTAMP` | `2025-03-23T14:05:00Z` |
+| `AGENT` | `@security-auditor`, `@orchestrator`, `@frontend-specialist` |
+| `MODEL_TIER` | `Opus`, `Sonnet`, `Flash` |
+| `TASK_TYPE` | `PHASE_1`, `PHASE_2`, `PHASE_3`, `PHASE_4`, `SURVEY`, `BUILD`, `EVALUATE` |
+| `COMPLEXITY` | `LOW`, `MODERATE`, `HIGH` |
+| `QUOTA_ESTIMATE` | `0.1x`, `1x`, `8x` |
+
+**Example:**
+```
+2025-03-23T14:05:00Z @security-auditor Sonnet PHASE_3 HIGH 1x — ASVS 3d: crypto audit initiated
+```
+
+> Agents log **before** starting the task. Secrets and user data are never logged. Log rotates at 5MB → `orchestration.log.bak`.
+
+---
+
+## 🚫 Anti-Patterns
+
+See [`ANTI_PATTERNS.md`](./ANTI_PATTERNS.md) for the full reference. Quick examples:
+
+| Anti-Pattern | Correct Approach |
+|---|---|
+| Loading all `kb-*.md` for a simple code task | Use router keywords; only load what the phase needs |
+| Calling Opus for `"list files"` or `"show status"` | Let router classify → Flash tier |
+| Skipping the Socratic Gate for a new feature | Ask ≥ 3 questions before any architecture decision |
+| Agent chains with no defined output artifact | Every phase must declare its output file |
+| Storing secrets in `session-state.md` | Use `.env` / Vault; session-state is task context only |
+
+---
+
 ## Mandatory Protocols
 
 ### Pre-Task Gate (every session)
